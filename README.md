@@ -1,4 +1,5 @@
-CECS-490 Project: Raytheon Drone Competition: Unmanned Ground Vehicle (UGV) Team
+
+# CECS-490 Project: Raytheon Drone Competition: Unmanned Ground Vehicle (UGV) Team
 
 Master Branch: This will serve as our main branch to merge new features or existing bug fixes of code
 
