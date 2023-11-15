@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Team 1 - Land Drone - Status</title>
+      <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+      <link rel="stylesheet" href="../static/css/general.css">
+      <script src="{{ url_for('static', filename='/js/bootstrap.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='/js/jquery-3.7.1.js') }}"></script>
+   </head>
+   <body>
+      <!-- Image and text -->
+      <nav class="navbar navbar-dark bg-dark shadow justify-content-center">
+         <a class="navbar-brand" href=".">
+            <img src="{{ url_for('static', filename='/img/csulb.svg') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+            <span class="navbar-brand mb-0 h1" href=".">Team 1 - Land Drone</span>
+         </a>
+         <div class="navigation">
+            <a href="{{ url_for('statusindex') }}">
+                  <span class="navbar-brand mb-0 h2">Status</span>
+            </a>
+            <a href="{{ url_for('mode') }}">
+                  <span class="navbar-brand mb-0 h2">Mode</span>
+            </a>
+         </div>
+      </nav>
+      <div class="container text-center">
+         <div class="row">
+            <div class="col-sm-4">
+               <div id="objdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">Object Detection Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"><b>OBJECT:</b> {{object}}</li>
+                        <li class="list-group-item text-left"><b>SCORE:</b> {{score}}</li>
+                        <li class="list-group-item text-left"><b>LOCATION:</b> {{location}}</li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-4">
+               <div id="ultdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">Ultra Sonic Detection Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-4">
+               <div id="moistdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">Moister Detection Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-sm-4">
+               <div id="locdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">GPS/RTK Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-4">
+               <div id="locdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">Battery Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-4">
+               <div id="wifistatus">
+                  <div class="card mt-5 mb-5 shadow">
+                     <h5 class="card-header">Wifi Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+      <script type="text/javascript">
+         // Referesh objdetect id every 1 second
+         var timeout = setInterval(reloadStatus, 1000);    
+         function reloadStatus () {
+            $('#objdetect').load(location.href + " #objdetect");
+         }
+
+      </script>
+   </body>
+</html>

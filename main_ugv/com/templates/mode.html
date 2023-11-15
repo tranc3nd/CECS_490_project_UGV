@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Team 1 - Land Drone - Mode</title>
+      <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+      <link rel="stylesheet" href="../static/css/general.css">
+      <script src="{{ url_for('static', filename='/js/bootstrap.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='/js/jquery-3.7.1.js') }}"></script>
+   </head>
+   <body>
+      <!-- Image and text -->
+      <nav class="navbar navbar-dark bg-dark shadow justify-content-center">
+         <a class="navbar-brand" href=".">
+            <img src="{{ url_for('static', filename='/img/csulb.svg') }}" width="30" height="30" class="d-inline-block align-top" alt="">
+            <span class="navbar-brand mb-0 h1" href=".">Team 1 - Land Drone</span>
+         </a>
+         <a href="{{ url_for('statusindex') }}">
+            <div id="status">
+               <span class="navbar-brand mb-0 h2">Status</span>
+            </div>
+         </a>
+         <a href="{{ url_for('mode') }}">
+            <div id="mode">
+               <span class="navbar-brand mb-0 h2">Mode</span>
+            </div>
+         </a>
+      </nav>
+      <div class="container text-center">
+         
+      </div>
+      
+   </body>
+</html>
