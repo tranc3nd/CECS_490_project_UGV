@@ -1,8 +1,11 @@
-#Main script to run the object detect routine.
+'''
+  Module runs the object detect routine.
+'''
 
 import argparse
 from collections.abc import Callable, Iterable, Mapping
 import sys
+from pathlib import Path
 import time
 from typing import Any
 
@@ -15,9 +18,19 @@ import utils
 from time import sleep
 from threading import Thread
 
+
+
+# Insert templates path and import thread
+templates_dir = str(Path.cwd().parent) + '/com/templates/'
+
+
 # Initialize variables
 location = ''
 parser = ''
+score = ''
+object = ''
+templateData = ''
+
 
 def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
         enable_edgetpu: bool) -> None:
@@ -37,7 +50,7 @@ def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
   text_color = (0, 0, 255)  # red
   font_size = 1
   font_thickness = 1
-  fps_avg_frame_count = 10
+  fps_avg_frame_count = 30
 
 
   # Initialize global variables
@@ -108,6 +121,7 @@ def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
         #print("\n")
         #print("Object:", object)
         #print("Score Guess:", score)
+        #print(fps_text)
       
         # Determine Object location
         if x_location < 150:
@@ -128,7 +142,8 @@ def parameters():
       '--model',
       help='Path of the object detection model.',
       required=False,
-      default='../gpio_sensor/object_detect/efficientdet_lite0.tflite')
+      default='../gpio_sensor/object_detect/efficientdet_lite0_edgetpu.tflite')
+      #default='efficientdet_lite0_edgetpu.tflite')
   parser.add_argument(
       '--cameraId', help='Id of camera.', required=False, type=int, default=0)
   parser.add_argument(
@@ -154,26 +169,19 @@ def parameters():
       help='Whether to run the model on EdgeTPU.',
       action='store_true',
       required=False,
-      default=False)
+      default=True)
   
   return parser
 
 
-# create thread
-class createObjDetThread(Thread):
+def detectstatus():
+  args, unknown = parameters().parse_known_args()
+  run(args.model, int(args.cameraId), args.frameWidth, args.frameHeight, int(args.numThreads), bool(args.enableEdgeTPU) )
+  templateData = {
+    'object': object,
+    'score': score,
+    'location': location
+  }
+  return templateData
+
   
-  def __init__(self):
-    Thread.__init__(self)
-    self.value = None
-
-  def run(self):
-    sleep(1)
-    args = parameters().parse_args()
-    run(args.model, int(args.cameraId), args.frameWidth, args.frameHeight, int(args.numThreads), bool(args.enableEdgeTPU) )
-    templateData = {
-      'object': object,
-      'score': score,
-      'location': location
-    }
-    self.value = templateData
-

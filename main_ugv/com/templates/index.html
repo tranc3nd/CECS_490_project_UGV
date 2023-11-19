@@ -16,10 +16,10 @@
             <span class="navbar-brand mb-0 h1" href=".">Team 1 - Land Drone</span>
          </a>
          <div class="navigation">
-            <a href="{{ url_for('statusindex') }}">
+            <a href="{{ url_for('status.status') }}">
                   <span class="navbar-brand mb-0 h2">Status</span>
             </a>
-            <a href="{{ url_for('mode') }}">
+            <a href="{{ url_for('modeone.mode_oneindex') }}">
                   <span class="navbar-brand mb-0 h2">Mode</span>
             </a>
          </div>
@@ -93,9 +93,10 @@
                   <div class="card mt-5 mb-5 shadow">
                      <h5 class="card-header">Wifi Status</h5>
                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
+                        <li class="list-group-item text-left">{{wifi_mode}}</li>
+                        <li class="list-group-item text-left">{{wifi_bit}}</li>
+                        <li class="list-group-item text-left">{{wifi_link}}</li>
+                        <li class="list-group-item text-left">{{wifi_ssid}}</li>
                      </ul>
                   </div>
                </div>
