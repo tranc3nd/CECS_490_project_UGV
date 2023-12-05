@@ -10,10 +10,12 @@ from sys import path
 
 
 # Import GPIO paths
-object_dir = str(Path.cwd().parent) + '/gpio_sensor/object_detect'
+object_dir = str(Path.cwd().parent) + '/gpio_sensor/object_detect' 
 path.insert(0, object_dir)
+#from gpio_sensor.status import status_page
 from gpio_sensor.status import status_page
 from mode.mode import mode_page
+
 
 # Set flask paths for template and static directory
 template_dir = str(Path.cwd().parent) + '/com/templates'
@@ -29,4 +31,5 @@ app.register_blueprint(status_page)
 
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=8000)
+  #app.run(host='0.0.0.0', port=8000)
+  print(object_dir)
