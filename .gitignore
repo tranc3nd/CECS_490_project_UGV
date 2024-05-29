@@ -1,3 +1,4 @@
 # DB Server files
 *.db
 *.log
+*.pyc
