@@ -1,0 +1,8 @@
+version: '3'
+services:
+  your_service:
+    image: myflaskapp
+    devices:
+      - "/dev/gpiochip4:/dev/gpiochip4"
+    # Or for privileged mode
+    privileged: true

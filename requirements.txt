@@ -1,0 +1,9 @@
+flask
+gunicorn
+gpiozero
+lgpio
+gpio
+gpiod
+RPi.GPIO
+paho-mqtt
+loguru

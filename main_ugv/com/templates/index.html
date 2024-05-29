@@ -7,6 +7,125 @@
       <link rel="stylesheet" href="../static/css/general.css">
       <script src="{{ url_for('static', filename='/js/bootstrap.min.js') }}"></script>
       <script src="{{ url_for('static', filename='/js/jquery-3.7.1.js') }}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+      <script type="text/javascript" src="dist/jmuxer.min.js"></script>
+            
+      <script type="text/javascript">
+         //const ip_address = '192.168.5.120';
+         const ip_address = '192.168.1.78';
+         //const ip_address = "rasp-server";
+         document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById("streamvideo").src = 'http://'+ ip_address +':8080/index.html';
+         });
+         
+         
+         // Create a client instance
+         client = new Paho.MQTT.Client(ip_address, Number(9001), "client1");
+
+         // set callback handlers
+         client.onConnectionLost = onConnectionLost;
+         client.onMessageArrived = objMessageArrived;
+
+         // connect the client
+         client.connect({onSuccess:onConnect});
+
+         // called when the client connects
+         function onConnect() {
+            // Once a connection has been made, make a subscription and send a message.
+            console.log("onConnect");
+            //client.subscribe("Object_pub");
+            //client.subscribe("Wifi_pub");
+            client.subscribe("Moist_pub");
+            client.subscribe("esp_pub");
+            client.subscribe("compass_pub")
+            client.subscribe("Ultra_pub");
+         }
+
+         // called when the client loses its connection
+         function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+               console.log("onConnectionLost:"+responseObject.errorMessage);
+            }
+         }
+
+         // called when a message arrives
+         function objMessageArrived(message) {
+
+
+            if(message.destinationName == "Object_pub") {
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               const objstring = "OBJECT: "
+               const scorestring = "SCORE: "
+               const locstring = "LOCATION: "
+               document.getElementById('object').innerHTML = objstring.bold() + obj[0];
+               document.getElementById('score').innerHTML = scorestring.bold() + obj[1];
+               document.getElementById('location').innerHTML = locstring.bold() + obj[2];
+            }
+
+            if(message.destinationName == "esp_pub") {
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               const latstring = "LATITUDE: "
+               const longstring = "LONGITUDE: "
+               const sivstring = "SIV: "
+               const accstring = "ACCURACY: "
+               document.getElementById('lat').innerHTML = latstring.bold() + obj[0];
+               document.getElementById('long').innerHTML = longstring.bold() + obj[1];
+               document.getElementById('siv').innerHTML = sivstring.bold() + obj[2];
+               document.getElementById('acc').innerHTML = accstring.bold() + obj[3];
+            }
+
+            if(message.destinationName == "compass_pub") {
+               //console.log(message.payloadString);
+               
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               var degrees = parseFloat(obj[0], 10).toString()
+               const compstring = "DEGREE: "
+               document.getElementById('compass').innerHTML = compstring.bold() + degrees; 
+            }
+
+            if(message.destinationName == "Wifi_pub") {
+               //console.log(message.payloadString);
+               
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               document.getElementById('wifimode').innerHTML = obj[0];
+               document.getElementById('wifibit').innerHTML = obj[1];
+               document.getElementById('wifilink').innerHTML = obj[2];
+               document.getElementById('wifissid').innerHTML = obj[3];
+               
+            }
+
+            if(message.destinationName == "Moist_pub") {
+               //console.log(message.payloadString);
+               
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               const statusstring = "HIT STATUS: "
+               const valuestring = "HIT COUNT: "
+               const countstring = "HIT VALUE: "
+               document.getElementById('readout').innerHTML = statusstring.bold() + obj[0];
+               document.getElementById('moistlvl').innerHTML = valuestring.bold() + obj[1];
+               document.getElementById('hitcount').innerHTML = countstring.bold() + obj[2];      
+            }
+            
+            if(message.destinationName == "Ultra_pub") {
+               //console.log(message.payloadString);   
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               obj = JSON.parse(str);
+               const distancestat = "DISTANCE: ";
+               document.getElementById('ultrasonic').innerHTML = distancestat.bold() + obj; 
+            }  
+         }
+      </script>
    </head>
    <body>
       <!-- Image and text -->
@@ -19,21 +138,34 @@
             <a href="{{ url_for('status.status') }}">
                   <span class="navbar-brand mb-0 h2">Status</span>
             </a>
-            <a href="{{ url_for('modeone.mode_oneindex') }}">
+            <a href="{{ url_for('modeone.mode_oneindex') }}" target="_blank">
                   <span class="navbar-brand mb-0 h2">Mode</span>
             </a>
          </div>
       </nav>
       <div class="container text-center">
          <div class="row">
-            <div class="col-sm-4">
+            <!--
+            <div class="col-sm-6">
                <div id="objdetect">
                   <div class="card mt-5 shadow">
                      <h5 class="card-header">Object Detection Status</h5>
                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"><b>OBJECT:</b> {{object}}</li>
-                        <li class="list-group-item text-left"><b>SCORE:</b> {{score}}</li>
-                        <li class="list-group-item text-left"><b>LOCATION:</b> {{location}}</li>
+                        <li id="object" class="list-group-item text-left"></li>
+                        <li id="score" class="list-group-item text-left"></li>
+                        <li id="location" class="list-group-item text-left"></li>
+                     </ul>
+                  </div>
+               </div>
+            </div> -->
+            <div class="col-sm-4">
+               <div id="moistdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">Moisture Detection Status</h5>
+                     <ul class="list-group list-group-flush">
+                        <li id="readout" class="list-group-item text-left"></li>
+                        <li id="moistlvl" class="list-group-item text-left"></li>
+                        <li id="hitcount" class="list-group-item text-left"></li>
                      </ul>
                   </div>
                </div>
@@ -43,74 +175,36 @@
                   <div class="card mt-5 shadow">
                      <h5 class="card-header">Ultra Sonic Detection Status</h5>
                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
+                        <li id="ultrasonic" class="list-group-item text-left"></li>
                      </ul>
                   </div>
                </div>
             </div>
-            <div class="col-sm-4">
-               <div id="moistdetect">
-                  <div class="card mt-5 shadow">
-                     <h5 class="card-header">Moister Detection Status</h5>
-                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="row">
             <div class="col-sm-4">
                <div id="locdetect">
                   <div class="card mt-5 shadow">
                      <h5 class="card-header">GPS/RTK Status</h5>
                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-            <div class="col-sm-4">
-               <div id="locdetect">
-                  <div class="card mt-5 shadow">
-                     <h5 class="card-header">Battery Status</h5>
-                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                        <li class="list-group-item text-left"></li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-            <div class="col-sm-4">
-               <div id="wifistatus">
-                  <div class="card mt-5 mb-5 shadow">
-                     <h5 class="card-header">Wifi Status</h5>
-                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-left">{{wifi_mode}}</li>
-                        <li class="list-group-item text-left">{{wifi_bit}}</li>
-                        <li class="list-group-item text-left">{{wifi_link}}</li>
-                        <li class="list-group-item text-left">{{wifi_ssid}}</li>
+                        <li id="lat" class="list-group-item text-left"></li>
+                        <li id="long" class="list-group-item text-left"></li>
+                        <li id="siv" class="list-group-item text-left"></li>
+                        <li id="acc" class="list-group-item text-left"></li>
+                        <li id="compass" class="list-group-item text-left"></li>
                      </ul>
                   </div>
                </div>
             </div>
          </div>
+         <!--
+         <div class="row">
+            <div class="mx-auto">
+               <div class="card mt-5 mb-5 shadow">
+                  <h5 class="card-header">Camera Stream</h5>
+                  <iframe id="streamvideo" src="" width="405" height="405"></iframe>
+               </div>
+            </div>
+         </div>-->
       </div>
       
-      <script type="text/javascript">
-         // Referesh objdetect id every 1 second
-         var timeout = setInterval(reloadStatus, 1000);    
-         function reloadStatus () {
-            $('#objdetect').load(location.href + " #objdetect");
-         }
-
-      </script>
    </body>
 </html>

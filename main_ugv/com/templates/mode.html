@@ -7,6 +7,14 @@
       <link rel="stylesheet" href="../static/css/general.css">
       <script src="{{ url_for('static', filename='/js/bootstrap.min.js') }}"></script>
       <script src="{{ url_for('static', filename='/js/jquery-3.7.1.js') }}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcQ3zqP4gd4E5BNX3k049WlCgVdHx78jk&callback=initMap"></script>
+      <style>
+         #map{
+             height: 400px;
+             width: 100%;
+         }
+      </style>
    </head>
    <body>
       <!-- Image and text -->
@@ -15,11 +23,6 @@
             <img src="{{ url_for('static', filename='/img/csulb.svg') }}" width="30" height="30" class="d-inline-block align-top" alt="">
             <span class="navbar-brand mb-0 h1" href=".">Team 1 - Land Drone</span>
          </a>
-         <a href="{{ url_for('status.status') }}">
-            <div id="status">
-               <span class="navbar-brand mb-0 h2">Status</span>
-            </div>
-         </a>
          <a href="{{ url_for('modeone.mode_oneindex') }}">
             <div id="mode">
                <span class="navbar-brand mb-0 h2">Mode</span>
@@ -27,7 +30,516 @@
          </a>
       </nav>
       <div class="container text-center">
+         <div class="card mt-5">
+            <h5 class="card-header">GOOGLE MAP</h5>
+            <div id="map"></div>
+         </div>
+         <div class="card mt-5 pb-5">
+            <div class="card-header">
+              <h5>CHALLENGES</h5>
+            </div>
+            <div class="card-body">
+               <div class="row">
+                  <div class="col-sm-4">
+                     <div id="challengeone">
+                        <div class="card mt-5 shadow">
+                           <h5 class="card-header">Challenge 1</h5>
+                           <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-left"><b>Status:</b> </li>
+                              <li class="list-group-item text-center">
+                                 <button type="button" id="enable1" class="btn btn-success">Enable</button>
+                              </li>
+                              <li class="list-group-item text-center">
+                                 <button type="button" id="disable1" class="btn btn-danger">Disable</button>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-4">
+                     <div id="challengetwo">
+                        <div class="card mt-5 shadow">
+                           <h5 class="card-header">Challenge 2</h5>
+                           <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-left"><b>Status:</b> </li>
+                              <li class="list-group-item text-center">
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination</b></label>
+                                    <input type="text" class="form-control mb-3" id="latOneCh2" name="latOne" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonOneCh2" name="lonOne" placeholder="longitude">
+                                 </div>
+                                 <button type="submit" id="submitChallenge2" class="btn btn-primary">Submit</button> 
+                              </li>                             
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-4">
+                     <div id="challengethree">
+                        <div class="card mt-5 shadow">
+                           <h5 class="card-header">Challenge 3</h5>
+                           <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-left"><b>Status:</b> </li>
+                              <li class="list-group-item text-center">
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 1</b></label>
+                                    <input type="text" class="form-control mb-3" id="latOneCh3" name="latOne" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonOneCh3" name="lonOne" placeholder="longitude">
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 2</b></label>
+                                    <input type="text" class="form-control mb-3" id="latTwoCh3" name="latTwo" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonTwoCh3" name="lonTwo" placeholder="longitude">
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 3</b></label>
+                                    <input type="text" class="form-control mb-3" id="latThreeCh3" name="latThree" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonThreeCh3" name="lonThree" placeholder="longitude">
+                                 </div>
+                                 <button type="submit" id="submitChallenge3" class="btn btn-primary">Submit</button>   
+                              </li>                           
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm-4">
+                     <div id="challengefour">
+                        <div class="card mt-5 shadow">
+                           <h5 class="card-header">Challenge 4</h5>
+                           <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-left"><b>Status:</b> </li>
+                              <li class="list-group-item text-center">
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 1</b></label>
+                                    <input type="text" class="form-control mb-3" id="latOneCh4" name="latOne" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonOneCh4" name="lonOne" placeholder="longitude">
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 2</b></label>
+                                    <input type="text" class="form-control mb-3" id="latTwoCh4" name="latTwo" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonTwoCh4" name="lonTwo" placeholder="longitude">
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="destination-1"><b>Destination 3</b></label>
+                                    <input type="text" class="form-control mb-3" id="latThreeCh4" name="latThree" placeholder="latitude">
+                                    <input type="text" class="form-control mb-3" id="lonThreeCh4" name="lonThree" placeholder="longitude">
+                                 </div>
+                                 <button type="submit" id="submitChallenge4" class="btn btn-primary">Submit</button>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-sm-4">
+                     <div id="bonuschallenge">
+                        <div class="card mt-5 shadow">
+                           <h5 class="card-header">Bonus Challenge</h5>
+                           <ul class="list-group list-group-flush">
+                              <li class="list-group-item text-left"><b>Status:</b> </li>
+                              <li class="list-group-item text-center">
+                                 <button type="button" id="enable5" class="enable5 btn btn-success">Enable</button>
+                              </li>
+                              <li class="list-group-item text-center">
+                                 <button type="button" id="disable5" class="btn btn-danger">Disable</button>
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row mt-2 pb-5">
+            <div class="col-lg">
+               <div id="objdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">MANUAL CONTROLS</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-center">
+                           <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id=""><b>SET MPH SPEED</b></span>
+                              </div>
+                              <input type="text" class="form-control" id="setSpeedInput" placeholder="0.1 to 0.5">
+                              <div class="input-group-append">
+                                 <button class="btn btn-primary" id="submitspeed" type="button">Submit</button>
+                               </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item text-center">
+                           <button type="button" id="forward" class="btn btn-primary">Forward</button>
+                        </li>
+                        <li class="list-group-item text-center">
+                           <button type="button" id="left" class="btn btn-primary mr-5">Left</button>
+                           <button type="button" id="stop" class="btn btn-danger">Stop</button>
+                           <button type="button" id="right" class="btn btn-primary ml-5">Right</button>
+                        </li>
+                        <li class="list-group-item text-center">
+                           <button type="button" id="backward" class="btn btn-primary">Backward</button>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
-      
+      <script>
+         const ip_address = '192.168.1.78';
+         var cur_lat, cur_long, init_lat, init_long, map, marker, carMarker;
+         var newLat = null; 
+         var newLng = null;
+         var initialPoint = null;
+         var initialPointset = false;
+         var startTime = null;
+         var locationArr;
+         const duration = 3000; // 1 second
+
+
+         // Create a client instance
+         client = new Paho.MQTT.Client(ip_address, Number(9001), "mode_client");
+
+         // set callback handlers
+         client.onConnectionLost = onConnectionLost;
+         client.onMessageArrived = objMessageArrived;
+
+         // connect the client
+         client.connect({onSuccess:onConnect});
+
+         // called when the client connects
+         function onConnect() {
+            // Once a connection has been made, make a subscription and send a message.
+            console.log("onConnect");
+            client.subscribe("esp_pub");  
+         }
+
+         // called when the client loses its connection
+         function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+               console.log("onConnectionLost:"+responseObject.errorMessage);
+            }
+         }
+
+         // called when a message arrives
+         function objMessageArrived(message) {
+            if(message.destinationName == "esp_pub") {
+               var str = message.payloadString;
+               str = str.replace(/'/g, '"');
+               var obj = JSON.parse(str);
+               cur_lat = obj[0];
+               cur_long = obj[1];
+
+               // Get the first lat and long only
+               if (!initialPointset && cur_lat && cur_long) {
+                  newLat = cur_lat;
+                  newLng = cur_long;
+                  updateCarPosition(newLat, newLng);
+                  initialPointset = true;
+               }
+               
+               
+            }
+         }
+
+         function timeGetIP() {
+            getPoints = [newLat, newLng];
+            return getPoints
+         }
+
+         // Function to update the marker position
+         function updateMarkerPosition(lat, lng) {
+            const newPosition = new google.maps.LatLng(lat, lng);
+            marker.setPosition(newPosition);
+            map.setCenter(newPosition);
+         }          
+
+         // Function to update car's position
+         function updateCarPosition(newLat, newLng) {
+            const newPosition = new google.maps.LatLng(newLat, newLng);
+            carMarker.setPosition(newPosition);
+            map.panTo(newPosition); // Optional: center the map on the new position
+         }
+
+
+         function startAnimation(currentLat, currentLng, destinationLat, destinationLng) {
+
+            startTime = null;
+            function animateMarker(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Interpolate new position
+                const newLat = currentLat + (destinationLat - currentLat) * progress;
+                const newLng = currentLng + (destinationLng - currentLng) * progress;
+                const newPosition = new google.maps.LatLng(newLat, newLng);
+                console.log("Progress:" + progress);
+                //console.log("New Position:" + newPosition);
+                //console.log("New Lat:" + newLat);
+                //console.log("New Long:" + newLng);
+                carMarker.setPosition(newPosition);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateMarker);
+                } else {
+                    currentLat = destinationLat;
+                    currentLng = destinationLng;
+                    startTime = null;
+                    // Restart animation with new destination if desired
+                }
+            }
+            requestAnimationFrame(animateMarker);
+         }
+
+         function initMap(){ //listen for 3 clicks next
+
+            //map options LB area
+            var options = {
+               zoom:30,
+               center:{lat:33.90655, lng:-118.24157}
+               //center:{lat:cur_lat, lng:cur_long}
+            }
+            //new map
+            map = new google.maps.Map(document.getElementById('map'), options);
+            
+            //add marker at CSULB
+            //google.maps.marker.AdvancedMarkerElement
+            /**
+            marker = new google.maps.Marker({
+                position:{lat: 33.77860, lng: -118.11161},
+                //position:{lat:cur_lat, lng:cur_long},
+                map:map
+            });
+            **/
+
+            // Initial Car Position
+            carMarker = new google.maps.Marker({
+               position: {lat:33.90655, lng:-118.24157},
+               map: map,
+               icon: '/static/img/car.png' // Optional: custom icon for the car
+            });
+
+            //Marker marker = googleMap.addMarker(new MarkerOptions().position(entry.getValue()).title(entry.getKey()));
+            /**
+            marker.addListener('click', function(){
+                infoWindow.open(map, marker);
+            });
+            **/
+            
+            // Listen for click on the map
+            map.addListener('click', function(event) {
+                // Get the coordinates of the clicked point
+                var clickedLat = event.latLng.lat(); 
+                var clickedLng = event.latLng.lng();
+                // Store the coordinates in the array
+               //clickedCoordinates.push({lat: clickedLat, long: clickedLng});
+               locationArr = {
+                  "lat": clickedLat, 
+                  "long": clickedLng, 
+                  "challenge": 2
+               }
+               $.ajax({
+                  url: '/mode/map',
+                  type: 'POST',
+                  contentType: "application/json",
+                  data: JSON.stringify(locationArr),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+                // Display coordinates
+                //alert("Clicked coordinates: " + clickedLat + ", " + clickedLng);
+                marker = new google.maps.Marker({
+                  //position:{lat: .77860, lng: -.11161},
+                  position:{lat:clickedLat, lng:clickedLng},
+                  map:map
+               });     
+               setTimeout(function() {
+                  console.log("Points:" + timeGetIP()[0]);
+                  //startAnimation(timeGetIP()[0], timeGetIP()[1], clickedLat, clickedLng)
+               }, 1000);  // processData will be called after 3 seconds
+            });
+         }
+
+         // Submit button for destinations
+         document.addEventListener("DOMContentLoaded", function() {
+            var submitChallenge2 = document.getElementById('submitChallenge2');
+            var submitChallenge3 = document.getElementById('submitChallenge3');
+            var submitChallenge4 = document.getElementById('submitChallenge4');
+            var setSpeed = document.getElementById('submitspeed')
+
+            submitChallenge2.addEventListener('click', function(event) {
+               event.preventDefault(); // Prevent the default form submit action
+               locationArr = {
+                  "challenge": 2,
+                  "lat" :latOneCh2.value,
+                  "long": lonOneCh2.value
+               }
+               console.log('Challenge 2 Destination Button 1 clicked');
+               // You can add more code here to handle the click event for Button 1
+               $.ajax({
+                  url: '/mode/map',
+                  type: 'POST',
+                  contentType: "application/json",
+                  data: JSON.stringify(locationArr),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+            });
+
+            submitChallenge3.addEventListener('click', function(event) {
+               event.preventDefault(); // Prevent the default form submit action
+               locationArr = {
+                  "challenge": 3,
+                  "lat1" :latOneCh3.value,
+                  "long1": lonOneCh3.value,
+                  "lat2" :latTwoCh3.value,
+                  "long2": lonTwoCh3.value,
+                  "lat3" :latThreeCh3.value,
+                  "long3": lonThreeCh3.value
+               }
+               console.log('Challenge 3 Destination Button 1 clicked');
+               // You can add more code here to handle the click event for Button 1
+               $.ajax({
+                  url: '/mode/destinations',
+                  type: 'POST',
+                  contentType: "application/json",
+                  data: JSON.stringify(locationArr),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+            });
+
+            submitChallenge4.addEventListener('click', function(event) {
+               event.preventDefault(); // Prevent the default form submit action
+               locationArr = {
+                  "challenge": 4,
+                  "lat1" :latOneCh4.value,
+                  "long1": lonOneCh4.value,
+                  "lat2" :latTwoCh4.value,
+                  "long2": lonTwoCh4.value,
+                  "lat3" :latThreeCh4.value,
+                  "long3": lonThreeCh4.value
+               }
+               console.log('Challenge 4 Destination Button 1 clicked');
+               // You can add more code here to handle the click event for Button 1
+               $.ajax({
+                  url: '/mode/destinations',
+                  type: 'POST',
+                  contentType: "application/json",
+                  data: JSON.stringify(locationArr),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+            });
+            
+            setSpeed.addEventListener('click', function(event) {
+               event.preventDefault(); // Prevent the default form submit action
+
+               console.log('Set Speed Button clicked');
+               // You can add more code here to handle the click event for Button 1
+               $.ajax({
+                  url: '/mode/speed',
+                  type: 'POST',
+                  //contentType: "application/json",
+                  data: setSpeedInput.value.toString(),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+            });
+         });
+
+         document.getElementById('forward').onclick = function() {
+            $.ajax({
+               url: '/mode/control',
+               type: 'POST',
+               //contentType: "application/json",
+               data: "200",
+               success: function(response) {
+                  console.log(response)
+               },
+               error: function(error) {
+                  console.log(error);
+               }
+            });
+         }
+         
+         document.getElementById('backward').onclick = function() {
+            $.ajax({
+               url: '/mode/control',
+               type: 'POST',
+               //contentType: "application/json",
+               data: "201",
+               success: function(response) {
+                  console.log(response)
+               },
+               error: function(error) {
+                  console.log(error);
+               }
+            });
+         }
+         document.getElementById('left').onclick = function() {
+            $.ajax({
+               url: '/mode/control',
+               type: 'POST',
+               //contentType: "application/json",
+               data: "202",
+               success: function(response) {
+                  console.log(response)
+               },
+               error: function(error) {
+                  console.log(error);
+               }
+            });
+         }
+         document.getElementById('right').onclick = function() {
+            $.ajax({
+               url: '/mode/control',
+               type: 'POST',
+               //contentType: "application/json",
+               data: "203",
+               success: function(response) {
+                  console.log(response)
+               },
+               error: function(error) {
+                  console.log(error);
+               }
+            });
+         }
+         document.getElementById('stop').onclick = function() {
+            $.ajax({
+               url: '/mode/control',
+               type: 'POST',
+               //contentType: "application/json",
+               data: "204",
+               success: function(response) {
+                  console.log(response)
+               },
+               error: function(error) {
+                  console.log(error);
+               }
+            });
+         }
+      </script>
    </body>
 </html>
