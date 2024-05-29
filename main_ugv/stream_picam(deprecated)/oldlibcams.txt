@@ -1,0 +1,12 @@
+Available cameras
+-----------------
+0 : imx219 [3280x2464 10-bit] (/base/axi/pcie@120000/rp1/i2c@88000/imx219@10)
+    Modes: 'SBGGR10_CSI2P' : 640x480 [30.00 fps - (0, 0)/0x0 crop]
+                             1640x1232 [30.00 fps - (0, 0)/0x0 crop]
+                             1920x1080 [30.00 fps - (0, 0)/0x0 crop]
+                             3280x2464 [30.00 fps - (0, 0)/0x0 crop]
+           'SBGGR8' : 640x480 [30.00 fps - (0, 0)/0x0 crop]
+                      1640x1232 [30.00 fps - (0, 0)/0x0 crop]
+                      1920x1080 [30.00 fps - (0, 0)/0x0 crop]
+                      3280x2464 [30.00 fps - (0, 0)/0x0 crop]
+
