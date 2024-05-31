@@ -5,8 +5,10 @@ from threading import Thread
 #from motor.manual_mov import stop
 from loguru import logger
 import time
+import datetime
 from gpiozero import Buzzer
 from gpiozero import LED
+
 
 buzzer = Buzzer(18) #GPIO 2
 # Define the GPIO pin number
@@ -49,14 +51,15 @@ client_web.loop_start()
 
 
 # Initialize variables to store data
-latitude = None
-longitude = None
+#latitude = None
+#longitude = None
 siv = None
 accuracy = None
 moisture = None
 
 
 def read_esp_data():
+    global latitude, longitude
     while True:
         # Read incoming data
         if ser.in_waiting > 0:
@@ -78,6 +81,7 @@ def read_esp(latitude, longitude, siv, accuracy, moisture):
     client.publish(esp_data_topic, str(readings))
 
 def read_moist(moisture):
+    log = ""
     hit_count = 0
     #if moisture > 3800:
     if moisture < 2000:
@@ -89,11 +93,12 @@ def read_moist(moisture):
             buzzer.off()
             led.off()
             read_out = "Water detected!"
-            logger_a.critical("Water detected. UGV has been hit. Stopping UGV...")
+            logger_a.critical("Water detected. UGV has been hit. Stopping UGV... | " + "Lat:" + str(latitude) + " Lon:" + str(longitude))
+            log = "Time:" + str(datetime.datetime.now()) + " | Water detected. UGV has been hit. Stopping UGV... | " + "Lat:" + str(latitude) + " Lon:" + str(longitude)
     else:
         read_out = "No water detected."
 
-    readings = [ read_out, hit_count, moisture ]
+    readings = [ read_out, hit_count, moisture, log ]
     client_web.publish(moist_topic, str(readings))
     client.publish(moist_topic, str(readings))
 

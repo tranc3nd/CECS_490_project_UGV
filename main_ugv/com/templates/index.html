@@ -113,7 +113,8 @@
                const countstring = "HIT VALUE: "
                document.getElementById('readout').innerHTML = statusstring.bold() + obj[0];
                document.getElementById('moistlvl').innerHTML = valuestring.bold() + obj[1];
-               document.getElementById('hitcount').innerHTML = countstring.bold() + obj[2];      
+               document.getElementById('hitcount').innerHTML = countstring.bold() + obj[2];  
+               document.getElementById('hitlog').innerHTML = obj[3];     
             }
             
             if(message.destinationName == "Ultra_pub") {
@@ -166,6 +167,7 @@
                         <li id="readout" class="list-group-item text-left"></li>
                         <li id="moistlvl" class="list-group-item text-left"></li>
                         <li id="hitcount" class="list-group-item text-left"></li>
+                        <li id="hitlog" class="list-group-item text-left"></li>
                      </ul>
                   </div>
                </div>

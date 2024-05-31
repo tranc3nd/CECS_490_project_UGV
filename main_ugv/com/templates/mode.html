@@ -34,7 +34,22 @@
             <h5 class="card-header">GOOGLE MAP</h5>
             <div id="map"></div>
          </div>
-         <div class="card mt-5 pb-5">
+         <div class="row mt-2 pb-5">
+            <div class="col-lg">
+               <div id="objdetect">
+                  <div class="card mt-5 shadow">
+                     <h5 class="card-header">RESET UGV</h5>
+                     <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-center">
+                           <p><b>WARNING: </b> This button will restart all the UGV sensor threads.</p>
+                           <button class="btn btn-danger" id="resetUGV" type="button">RESET</button>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="card mt-4 pb-5">
             <div class="card-header">
               <h5>CHALLENGES</h5>
             </div>
@@ -370,7 +385,8 @@
             var submitChallenge2 = document.getElementById('submitChallenge2');
             var submitChallenge3 = document.getElementById('submitChallenge3');
             var submitChallenge4 = document.getElementById('submitChallenge4');
-            var setSpeed = document.getElementById('submitspeed')
+            var setSpeed = document.getElementById('submitspeed');
+            var resetugv = document.getElementById('resetUGV');
 
             submitChallenge2.addEventListener('click', function(event) {
                event.preventDefault(); // Prevent the default form submit action
@@ -459,6 +475,25 @@
                   type: 'POST',
                   //contentType: "application/json",
                   data: setSpeedInput.value.toString(),
+                  success: function(response) {
+                      console.log(response);
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  }
+               });
+            });
+
+            resetugv.addEventListener('click', function(event) {
+               event.preventDefault(); // Prevent the default form submit action
+
+               console.log('Reset UGV Button clicked');
+               // You can add more code here to handle the click event for Button 1
+               $.ajax({
+                  url: '/reset',
+                  type: 'POST',
+                  //contentType: "application/json",
+                  data: 'true',
                   success: function(response) {
                       console.log(response);
                   },

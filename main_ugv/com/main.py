@@ -12,9 +12,6 @@ from flask_mqtt import Mqtt
 from flask_socketio import SocketIO
 
 
-
-
-
 # Import GPIO paths
 object_dir = str(Path.cwd().parent)
 path.insert(0, object_dir)
